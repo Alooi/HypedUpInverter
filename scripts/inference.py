@@ -47,15 +47,17 @@ def run():
 
     global_i = 0
     global_time = 0
+    time_report = []
     for input_batch in tqdm(dataloader):
         if global_i >= opts.n_images:
             break
         with torch.no_grad():
             input_cuda = input_batch.cuda().float()
             tic = time.time()
-            w_images, final_images, predicted_weights = run_on_batch(input_cuda, net)
+            w_images, final_images, predicted_weights, time_array = run_on_batch(input_cuda, net)
             toc = time.time()
             global_time += toc - tic
+            time_report += time_array
 
         bs = final_images.size(0)
         for i in range(bs):
@@ -76,6 +78,10 @@ def run():
 
     stats_path = os.path.join(opts.exp_dir, "stats.txt")
     result_str = "Runtime {:.4f}".format(global_time / len(dataset))
+    result_str += "\nRuntime Breakdown\n"
+    result_str += "ENCODER:{:.4}\nencoder+normalization: {:.4f}\nW-generation: {:.4f}\n".format((time_array[0]+time_array[1]+time_array[2]+time_array[5]/ len(dataset)),(time_array[0]+time_array[1] / len(dataset)), (time_array[2]/len(dataset)))
+    result_str += "Hypernetwork:{:.4}\nbar+encoder_features: {:.4f}\nHypernetwork-generation: {:.4f}\n".format((time_array[3]+time_array[4]/len(dataset)),(time_array[3] / len(dataset)), (time_array[4]/len(dataset)))
+    result_str += "Unaccounted for time (others): {:.4}\n".format(global_time-sum(time_array)/len(dataset))
     print(result_str)
 
     with open(stats_path, "w") as f:

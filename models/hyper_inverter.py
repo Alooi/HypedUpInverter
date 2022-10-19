@@ -2,6 +2,7 @@ import argparse
 import copy
 import math
 import pickle
+import time
 
 import torch
 import torch.nn as nn
@@ -172,33 +173,46 @@ class HyperInverter(nn.Module):
         num_ws = self.decoder[0].mapping.num_ws
 
         # Resize image to feed to encoder
+        tic = time.time()
         x = F.interpolate(x, size=(256, 256), mode="bilinear", align_corners=False)
-
+        toc = time.time()
+        resize_time = toc - tic
         # ======== Phase 1 ======== #
 
         # Obtain w code via W Encoder
+        tic = time.time()
         w_codes = self.w_encoder(x)  # bs x 1 x 512
-
+        toc = time.time()
+        encoder_time = toc - tic
         # Normalize with respect to the center of an average face
+        tic = time.time()
         w_codes = w_codes + self.latent_avg.repeat(w_codes.shape[0], 1)
         w_codes = w_codes.unsqueeze(1).repeat([1, num_ws, 1])
+        toc = time.time()
+        normalize_time = toc - tic
 
         # Genenerate W-images
+        tic = time.time()
         with torch.no_grad():
             w_images = self.decoder[0].synthesis(w_codes, added_weights=None, noise_mode="const")
-
+        toc = time.time()
+        generation_time = toc - tic
         # ======== Phase 2 ======== #
 
         # Get w_bar code via W bar encoder
+        tic = time.time()
         w_bar_codes = self.w_bar_encoder(x)
 
         # Get w image features
         w_images_resized = F.interpolate(w_images, size=(256, 256), mode="bilinear", align_corners=False)
         w_image_codes = self.w_bar_encoder(w_images_resized)
-
+        toc = time.time()
+        bar_encoder_features_time = toc - tic
         # Predict weights added to weights of StyleGAN2-Ada synthesis network
+        tic = time.time()
         predicted_weights = self.hypernet(w_image_codes, w_bar_codes)
-
+        toc = time.time()
+        hypernet_time = toc - tic
         # Generate final images from predicted weights and w codes
         final_images = []
 
@@ -220,7 +234,7 @@ class HyperInverter(nn.Module):
 
         final_images = torch.stack(final_images, 0)
 
-        return_data = [w_images, final_images, predicted_weights]
+        return_data = [w_images, final_images, predicted_weights, [encoder_time, normalize_time, generation_time, bar_encoder_features_time, hypernet_time, resize_time]]
         if return_latents:
             return_data.append(w_codes)
 

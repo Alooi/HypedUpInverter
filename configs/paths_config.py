@@ -1,7 +1,7 @@
 dataset_paths = {
     #  Human Face (FFHQ - train , CelebA-HQ - test)
-    "ffhq": "",
-    "celeba_test": "",
+    "ffhq": "../../../ibex/scratch/nasseraa/resized",
+    "celeba_test": "../../../ibex/scratch/nasseraa/celeb_hq_256",
     # Churches (LSUN Churches)
     "church_train": "",
     "church_test": "",
@@ -10,10 +10,10 @@ dataset_paths = {
 model_paths = {
     # ---------------------------------------------------------------------------#
     # W Encoder
-    "w_encoder_ffhq": "",
+    "w_encoder_ffhq": "pretrained_models/w_encoder_e4e_ffhq_encode.pt",
     "w_encoder_church": "",
     # Our HyperInverter models
-    "hyper_inverter_ffhq": "",
+    "hyper_inverter_ffhq": "pretrained_models/hyper_inverter_e4e_ffhq_encode_lightweight.pt",
     "hyper_inverter_church": "",
     # ---------------------------------------------------------------------------#
     # Official pre-trained models from other SOTA methods

@@ -2,5 +2,7 @@
 /output
 /result
 /pretrained_models
+/data
+/results*
 
 *.pyc

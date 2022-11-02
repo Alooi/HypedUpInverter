@@ -2,8 +2,8 @@
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/nasseraa/.conda/envs/inv_analysis/lib/
 
-INPUT_DATA_DIR="./output"
-RESULT_DIR="./result"
+INPUT_DATA_DIR="./data/faces/test1"
+RESULT_DIR="./results-default-1"
 MODEL_PATH="./pretrained_models/hyper_inverter_e4e_ffhq_encode_lightweight.pt"
 GPU_ID=0
 

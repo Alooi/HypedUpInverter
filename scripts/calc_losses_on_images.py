@@ -36,7 +36,7 @@ def run(args):
 
     print("Loading dataset")
     dataset = GTResDataset(root_path=args.data_path, gt_dir=args.gt_path, transform=transform)
-
+    print("Dataset loaded !")
     dataloader = DataLoader(
         dataset, batch_size=args.batch_size, shuffle=False, num_workers=int(args.workers), drop_last=True
     )
@@ -52,6 +52,7 @@ def run(args):
     global_i = 0
     scores_dict = {}
     all_scores = []
+    print("batch size:", args.batch_size)
     for result_batch, gt_batch in tqdm(dataloader):
         for i in range(args.batch_size):
             loss = float(loss_func(result_batch[i : i + 1].cuda(), gt_batch[i : i + 1].cuda()))

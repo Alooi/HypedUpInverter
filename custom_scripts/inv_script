@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+# source load inv_analysis
+module load cudnn/8.1.1-cuda11.2.2
+module load gcc/6.4.0
+# jupyter notebook --no-browser --ip=0.0.0.0 --port=8888

@@ -2,19 +2,9 @@
 1. [Getting Started](#Getting-Started)
 2. [Experiments](#Experiments)
 3. [Acknowledgments](#Acknowledgments)
-4. [Contacts](#Contacts)
 
-# HyperedUpInverter: Inverting a video into styleGAN space using HyperNetworks
+# HypedUpInverter: Inverting a video into styleGAN space using HyperNetworks
 
-<a href="https://di-mi-ta.github.io/HyperInverter/"><img src="https://img.shields.io/badge/WEBSITE-Visit%20project%20page-blue?style=for-the-badge"></a>
-<a href="https://arxiv.org/abs/2112.00719"><img src="https://img.shields.io/badge/arxiv-2112.00719-red?style=for-the-badge"></a>
-<!-- <a href="http://colab.research.google.com/github/di-mi-ta/hyper-inverter-code/blob/main/notebooks/demo.ipynb"><img src="https://img.shields.io/badge/DEMO-open%20in%20colab-blue?style=for-the-badge"></a> -->
-
-[Tan M. Dinh](https://di-mi-ta.github.io/),
-[Anh Tran](https://sites.google.com/site/anhttranusc/),
-[Rang Nguyen](https://sites.google.com/site/rangmanhonguyen/),
-[Binh-Son Hua](https://sonhua.github.io/)<br>
-VinAI Research, Vietnam
 
 > **Abstract:** 
     In this paper we explore the recent work of HyperInverters with extensive analysis, all while exploring new direction to employ HyperNetworks for real-time inversion applications. Most real-time applications are focused on a single subject over many frames, going off that knowledge, we can optimize the HyperNetwork for that single subject to improve the quality of the inversions while sacrificing little to no inference-time and efficiency. HyperNetworks are light and can be optimized or retrained in a short time, so we present two methods of doing real-time inversion, either by optimizing the network on a fixed set of frames, or training the hypernetwork on all frames of every video we wish to invert in real-time. In both cases we find the efficiency of the inversions improve while keeping the same speed, if not faster at higher efficiency.
@@ -49,19 +39,29 @@ pip install -r requirements.txt
 
 If you need to try with your own dataset, you can make the necessary modifications in: (i) `data_configs.py` to define your data paths; (ii) `transforms_configs.py` to define your data transformations.
 
+## Training
+Make sure to align all of your frames/images using the script in custom/aligning.sh
+
+custom_scripts/train_fine_tuned.sh: This script is for training a new HyperNetwork with different parameters for every video. This will generate a new folder with the weights and other metrics.
 
 ## Experiments
 
+There are custom scripts written in /custom_scripts. Those scripts are meant to work on iBex.kaust with a change to the user name in the scripts.
+Before doing any experiements, use the aligning script to align all of your images/frames if required.
+
 ### Quantitative Evaluation
+
+custom_scripts/inferencing.sh: use this script to generate inversion, a change to the experiemnt path is required. The results will be in the same experiment folder of your choosing.
 
 ### Qualitative Comparison
 
-For the following experiments, please visit file `configs/paths_config.py` and update `model_paths` dict with the paths to the pre-trained models of HyperInverter and other inversion methods. For other inversion methods, please visit their Github repositories to download their pre-trained weights. 
+custom_scripts/LPIPS.sh: contains LPIPS and L2 losses, a change to the experiemnt path is required.
+
+For the following experiments, please visit file `configs/paths_config.py` and update `model_paths` dict with the paths to the pre-trained models of HypedUpInverter, HyperInverter and other inversion methods. For other inversion methods, please visit their Github repositories to download their pre-trained weights.
 
 #### Reconstruction 
 
 The results can be found in the `outputs/SAVED_RESULTS_DIR_NAME` folder.
-
 
 ## Acknowledgments
 Our source code is developed based on the codebase of a great series of StyleGAN inversion researches from the Tel Aviv University group and HyperInverter, which are: [pSp](https://github.com/danielroich/PTIhttps://github.com/danielroich/PTI), [e4e](https://github.com/omertov/encoder4editing), [ReStyle](https://github.com/yuval-alaluf/restyle-encoder), [PTI](https://github.com/danielroich/PTI), and [HyperInverter](https://github.com/VinAIResearch/HyperInverter). 

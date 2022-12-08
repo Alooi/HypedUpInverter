@@ -4,5 +4,10 @@
 /pretrained_models
 /data
 /results*
+/exp*
+/dcgm*
+/pretrained_dicts
 
 *.pyc
+*.gif
+gpu*

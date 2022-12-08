@@ -11,7 +11,7 @@ import numpy as np  # noqa: E402
 import torch  # noqa: E402
 from configs import data_configs  # noqa: E402
 from datasets.inference_dataset import InferenceDataset  # noqa: E402
-from models.hyper_inverter import HyperInverter  # noqa: E402
+from models.hyper_inverter import HyperInverter_online  # noqa: E402
 from options.test_options import TestOptions  # noqa: E402
 from PIL import Image  # noqa: E402
 from torch.utils.data import DataLoader  # noqa: E402
@@ -31,10 +31,9 @@ def run():
     opts = ckpt["opts"]
     opts.update(vars(test_opts))
     opts = argparse.Namespace(**opts)
-    net = HyperInverter(opts)
+    net = HyperInverter_online(opts)
     net.eval()
     net.cuda()
-    # print(net.parameters)
 
     dataset_args = data_configs.DATASETS[opts.dataset_type]
     transforms_dict = dataset_args["transforms"](opts).get_transforms()
@@ -48,7 +47,7 @@ def run():
 
     global_i = 0
     global_time = 0
-    time_report = [0,0,0,0,0]
+    time_report = []
     for input_batch in tqdm(dataloader):
         if global_i >= opts.n_images:
             break
@@ -58,11 +57,11 @@ def run():
             w_images, final_images, predicted_weights, time_array = run_on_batch(input_cuda, net)
             toc = time.time()
             global_time += toc - tic
-            for i in range(len(time_array)):
-                time_report[i] += time_array[i]
+            time_report += time_array
 
         bs = final_images.size(0)
         for i in range(bs):
+            # print("size of final images is:", final_images[i].size())
             final_image = tensor2im(final_images[i])
             w_image = tensor2im(w_images[i])
 
@@ -79,14 +78,11 @@ def run():
             global_i += 1
 
     stats_path = os.path.join(opts.exp_dir, "stats.txt")
-    generation_time, bar_encoder_features_time, hypernet_time, E1_time, final_generation = time_report
     result_str = "Runtime {:.4f}".format(global_time / len(dataset))
     result_str += "\nRuntime Breakdown\n"
-    result_str += "ENCODER (E1):{:.4}\n".format(E1_time / len(dataset))
-    result_str += "Generator 1:{:.4}\n".format(generation_time / len(dataset))
-    result_str += "W_Bar (E1):{:.4}\n".format(bar_encoder_features_time / len(dataset))
-    result_str += "HyperNet:{:.4}\n".format(hypernet_time / len(dataset))
-    result_str += "Final Generation:{:.4}".format(final_generation / len(dataset))
+    result_str += "ENCODER:{:.4}\nencoder+normalization: {:.4f}\nW-generation: {:.4f}\n".format((time_array[0]+time_array[1]+time_array[2]+time_array[5]/ len(dataset)),(time_array[0]/len(dataset)),(time_array[1] / len(dataset)), (time_array[2]/len(dataset)))
+    result_str += "Hypernetwork:{:.4}\nbar+encoder_features: {:.4f}\nHypernetwork-generation: {:.4f}\n".format((time_array[3]+time_array[4]/len(dataset)),(time_array[3] / len(dataset)), (time_array[4]/len(dataset)))
+    result_str += "Unaccounted for time (others): {:.4}\n".format((global_time-sum(time_array))/len(dataset))
     print(result_str)
 
     with open(stats_path, "w") as f:

@@ -17,4 +17,11 @@ DATASETS = {
         "test_source_root": dataset_paths["church_test"],
         "test_target_root": dataset_paths["church_test"],
     },
+    "video_encode": {
+        "transforms": transforms_config.EncodeTransforms,
+        "train_source_root": dataset_paths["video_train"],
+        "train_target_root": dataset_paths["video_train"],
+        "test_source_root": dataset_paths["video_test"],
+        "test_target_root": dataset_paths["video_test"],
+    },
 }

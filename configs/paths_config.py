@@ -1,10 +1,14 @@
 dataset_paths = {
     #  Human Face (FFHQ - train , CelebA-HQ - test)
-    "ffhq": "../../../ibex/scratch/nasseraa/resized",
-    "celeba_test": "../../../ibex/scratch/nasseraa/celeb_hq_256",
+    "ffhq": "../../../../ibex/scratch/nasseraa/ffhq-1000",
+    "celeba_test": "../../../../ibex/scratch/nasseraa/celeba_hq_256",
     # Churches (LSUN Churches)
     "church_train": "",
     "church_test": "",
+    # Video (VFHQ)
+    ## TODO change the path
+    "video_train": "../../../../ibex/scratch/nasseraa/clip-long-test-100-aligned",
+    "video_test": "../../../../ibex/scratch/nasseraa/clip-long-test-100-aligned",
 }
 
 model_paths = {

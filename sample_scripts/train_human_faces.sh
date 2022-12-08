@@ -1,5 +1,5 @@
-EXPERIMENT_DIR=""
-W_ENCODER_PATH=""
+EXPERIMENT_DIR="test-1"
+W_ENCODER_PATH="pretrained_models/w_encoder_e4e_ffhq_encode.pt"
 GPU_ID=0
 
 CUDA_VISIBLE_DEVICES="$GPU_ID" \
@@ -30,4 +30,4 @@ python scripts/train.py \
 --hidden_dim=128 \
 --num_cold_steps=20000 \
 --save_checkpoint_for_resuming_training \
---use_wandb
+# --use_wandb

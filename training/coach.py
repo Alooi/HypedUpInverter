@@ -14,7 +14,7 @@ from torch.utils.data import DataLoader
 from training.ranger import Ranger
 from utils import train_utils
 from utils.common import count_parameters, toogle_grad
-
+from custom_python import writetofile
 
 class Coach:
     def __init__(self, opts):
@@ -64,7 +64,7 @@ class Coach:
             self.lpips_loss = LPIPS(net_type=self.opts.lpips_type).to(self.opts.device).eval()
 
         if self.opts.hyper_id_lambda > 0:
-            if "ffhq" in self.opts.dataset_type or "celeb" in self.opts.dataset_type:
+            if "ffhq" in self.opts.dataset_type or "celeb" in self.opts.dataset_type or "video" in self.opts.dataset_type:
                 self.id_loss = id_loss.IDLoss().to(self.device).eval()
             else:
                 self.id_loss = moco_loss.MocoLoss(opts).to(self.device).eval()
@@ -76,6 +76,9 @@ class Coach:
         # Resume training process from checkpoint path
         if self.opts.resume_training:
             ckpt = torch.load(self.opts.checkpoint_path, map_location="cpu")
+            os.makedirs(os.path.join(opts.exp_dir, "stdout"), exist_ok=True)
+            writetofile.write_to_file(os.path.join(opts.exp_dir, "stdout/state_dict.txt") , ckpt)
+            # print("############ what currently exist is:", ckpt["state_dict"])
 
             print("Load encoder optimizer from checkpoint")
             self.encoder_optimizer.load_state_dict(ckpt["encoder_optimizer"])
@@ -128,7 +131,7 @@ class Coach:
                 # Generate images
                 x, y = batch  # x: input image, # y: target image
                 x, y = x.to(self.device).float(), y.to(self.device).float()
-                w_y_hat, y_hat, predicted_weights = self.net.forward(x, return_latents=False)
+                w_y_hat, y_hat, predicted_weights, time_array = self.net.forward(x, return_latents=False)
 
                 # Check the condition to use adversarial loss
                 self.use_adv_loss = self.global_step >= self.opts.step_to_add_adversarial_loss
@@ -235,7 +238,7 @@ class Coach:
 
             with torch.no_grad():
                 x, y = x.to(self.device).float(), y.to(self.device).float()
-                w_y_hat, y_hat, predicted_weights = self.net.forward(x, return_latents=False)
+                w_y_hat, y_hat, predicted_weights, time_array = self.net.forward(x, return_latents=False)
                 # Calc loss between final images and input images
                 loss, cur_loss_dict, id_logs = self.calc_encoder_loss(y_hat, y, w_y_hat)
 

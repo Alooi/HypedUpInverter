@@ -34,7 +34,7 @@ class W_Encoder(nn.Module):
         opts = ckpt["opts"]
         opts = argparse.Namespace(**opts)
 
-        if "ffhq" in self.opts.dataset_type or "celeb" in self.opts.dataset_type:
+        if "ffhq" in self.opts.dataset_type or "celeb" in self.opts.dataset_type or "video" in self.opts.dataset_type:
             # Using ResNet-IRSE50 for facial domain
             self.w_encoder = fpn_encoders.BackboneEncoderUsingLastLayerIntoW(50, "ir_se", opts)
         else:

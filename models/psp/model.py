@@ -44,7 +44,7 @@ class pSp(nn.Module):
         return encoder
 
     def __get_encoder_checkpoint(self):
-        if "ffhq" in self.opts.dataset_type:
+        if "ffhq" in self.opts.dataset_type or "video" in self.opts.dataset_type:
             print("Loading encoders weights from irse50!")
             encoder_ckpt = torch.load(model_paths["ir_se50"])
             return encoder_ckpt

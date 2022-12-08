@@ -1,4 +1,15 @@
-#!/bin/sh
+#!/bin/bash
+#SBATCH --job-name loss_all
+#SBATCH --time=0-00:03:00
+#SBATCH -o gpu.%A.out
+#SBATCH -e gpu.%A.err
+#SBATCH --gres=gpu:v100:1
+#SBATCH --mem=25GB
+module purge
+module load anaconda3/2019.10
+module load cudnn/8.1.1-cuda11.2.2
+module load gcc/6.4.0
+source activate inv_analysis
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/nasseraa/.conda/envs/inv_analysis/lib/
 
@@ -58,3 +69,6 @@ python scripts/calc_losses_on_images.py \
 --mode l2 \
 --data_path="$EXPERIMENT_DIR"/inference_results \
 --gt_path="$DATA_PATH" 
+
+
+conda deactivate

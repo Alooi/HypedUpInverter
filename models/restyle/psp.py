@@ -132,7 +132,7 @@ class pSp(nn.Module):
             self.latent_avg = None
 
     def __get_encoder_checkpoint(self):
-        if "ffhq" in self.opts.dataset_type:
+        if "ffhq" in self.opts.dataset_type or "video" in self.opts.dataset_type:
             print("Loading encoders weights from irse50!")
             encoder_ckpt = torch.load(model_paths["ir_se50"])
             # Transfer the RGB input of the irse50 network to the first 3 input channels of pSp's encoder

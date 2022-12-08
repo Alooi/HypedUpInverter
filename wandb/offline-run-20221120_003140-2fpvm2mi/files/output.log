@@ -1,0 +1,22 @@
+Loaded pretrained W encoder from: pretrained_models/w_encoder_e4e_ffhq_encode.pt
+Loading encoders weights from irse50!
+Traceback (most recent call last):
+  File "/home/nasseraa/inversion-analysis/HyperInverter/scripts/train.py", line 38, in <module>
+    main()
+  File "/home/nasseraa/inversion-analysis/HyperInverter/scripts/train.py", line 33, in main
+    coach = Coach(opts)
+  File "/home/nasseraa/inversion-analysis/HyperInverter/./training/coach.py", line 41, in __init__
+    self.net = HyperInverter(self.opts).to(self.device)
+  File "/home/nasseraa/inversion-analysis/HyperInverter/./models/hyper_inverter.py", line 65, in __init__
+    self.load_weights()
+  File "/home/nasseraa/inversion-analysis/HyperInverter/./models/hyper_inverter.py", line 158, in load_weights
+    w_bar_encoder_ckpt = self.__get_encoder_checkpoint()
+  File "/home/nasseraa/inversion-analysis/HyperInverter/./models/hyper_inverter.py", line 164, in __get_encoder_checkpoint
+    encoder_ckpt = torch.load(model_paths["ir_se50"])
+  File "/home/nasseraa/.conda/envs/inv_analysis/lib/python3.9/site-packages/torch/serialization.py", line 594, in load
+    with _open_file_like(f, 'rb') as opened_file:
+  File "/home/nasseraa/.conda/envs/inv_analysis/lib/python3.9/site-packages/torch/serialization.py", line 230, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/home/nasseraa/.conda/envs/inv_analysis/lib/python3.9/site-packages/torch/serialization.py", line 211, in __init__
+    super(_open_file, self).__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: 'pretrained_models/model_ir_se50.pth'

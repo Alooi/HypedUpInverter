@@ -195,6 +195,7 @@ def parse_args():
 
 def run(args):
     root_path = args.raw_dir
+    print("Root path: {}".format(root_path))
     out_crops_path = args.saved_dir
     if not os.path.exists(out_crops_path):
         os.makedirs(out_crops_path, exist_ok=True)

@@ -44,6 +44,8 @@ Make sure to align all of your frames/images using the script in custom/aligning
 
 custom_scripts/train_fine_tuned.sh: This script is for training a new HyperNetwork with different parameters for every video. This will generate a new folder with the weights and other metrics.
 
+If you are using iBex.kaust, you can use the custom job scripts included for training.
+
 ## Experiments
 
 There are custom scripts written in /custom_scripts. Those scripts are meant to work on iBex.kaust with a change to the user name in the scripts.
